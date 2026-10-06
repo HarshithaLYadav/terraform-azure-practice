@@ -1,0 +1,60 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  terraformVersion: '1.9.8'
+  terraformWorkingDirectory: '$(System.DefaultWorkingDirectory)/vm'
+
+steps:
+
+- checkout: self
+
+- task: TerraformInstaller@1
+  displayName: 'Install Terraform'
+  inputs:
+    terraformVersion: '$(terraformVersion)'
+
+- task: AzureCLI@2
+  displayName: 'Terraform Init'
+  inputs:
+    azureSubscription: 'demo-service-connection'
+    scriptType: bash
+    scriptLocation: inlineScript
+    workingDirectory: '$(terraformWorkingDirectory)'
+    inlineScript: |
+      terraform init
+
+- task: AzureCLI@2
+  displayName: 'Terraform Validate'
+  inputs:
+    azureSubscription: 'demo-service-connection'
+    scriptType: bash
+    scriptLocation: inlineScript
+    workingDirectory: '$(terraformWorkingDirectory)'
+    inlineScript: |
+      terraform validate
+
+- task: AzureCLI@2
+  displayName: 'Terraform Plan'
+  inputs:
+    azureSubscription: 'demo-service-connection'
+    scriptType: bash
+    scriptLocation: inlineScript
+    workingDirectory: '$(terraformWorkingDirectory)'
+    inlineScript: |
+      terraform plan -out=tfplan
+
+- task: AzureCLI@2
+  displayName: 'Terraform Apply'
+  inputs:
+    azureSubscription: 'demo-service-connection'
+    scriptType: bash
+    scriptLocation: inlineScript
+    workingDirectory: '$(terraformWorkingDirectory)'
+    inlineScript: |
+      terraform apply -auto-approve tfplan
