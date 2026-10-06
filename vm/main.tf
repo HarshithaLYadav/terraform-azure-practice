@@ -1,36 +1,12 @@
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = ">= 4.0"
-    }
-  }
-}
-
-provider "azurerm" {
-  features {}
-
-  resource_provider_registrations = "none"
-  use_cli                         = false
-
-  environment   = "stack"
-  metadata_host = "localhost:4577"
-
-  subscription_id = "00000000-0000-0000-0000-000000000001"
-  tenant_id       = "00000000-0000-0000-0000-000000000002"
-  client_id       = "00000000-0000-0000-0000-000000000003"
-  client_secret   = "fake-secret"
-}
-
-resource "azurerm_resource_group" "vm_rg" {
+resource "azurerm_resource_group" "rg" {
   name     = var.resource_group_name
   location = var.location
 }
 
 resource "azurerm_virtual_network" "vm_vnet" {
   name                = var.vnet_name
-  location            = azurerm_resource_group.vm_rg.location
-  resource_group_name = azurerm_resource_group.vm_rg.name
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
 
   address_space = ["10.0.0.0/16"]
 }
@@ -103,7 +79,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
 
   admin_ssh_key {
     username   = var.admin_username
-    public_key = file("~/.ssh/id_rsa.pub")
+    public_key = var.admin_ssh_public_key
   }
 
   os_disk {

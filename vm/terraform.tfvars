@@ -1,4 +1,4 @@
-resource_group_name = "rg-vm-practice"
+resource_group_name = "harshpractice"
 location            = "Central India"
 
 vnet_name   = "vnet-vm-practice"

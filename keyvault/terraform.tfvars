@@ -1,4 +1,4 @@
-resource_group_name = "rg-keyvault-practice"
+resource_group_name = "harshpractice"
 location            = "Central India"
 
 key_vault_name = "kv-terraform-practice"

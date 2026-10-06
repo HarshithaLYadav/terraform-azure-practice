@@ -1,4 +1,4 @@
-resource_group_name = "rg-aks-practice"
+resource_group_name = "harshpractice"
 location            = "Central India"
 aks_cluster_name    = "aks-terraform-practice"
 dns_prefix          = "aks-terraform-practice"
